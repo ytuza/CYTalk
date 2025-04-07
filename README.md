@@ -1,5 +1,7 @@
 # 🗨️ Cytalk - Real-Time Chat App
 
+![App](screenshots/app.jpeg)
+
 Cytalk es una aplicación de chat en tiempo real desarrollada con **Django**, **Django Channels**, **React Native (Expo)** y **Firebase**. Soporta mensajería instantánea, reacciones, subida de imágenes, notificaciones push y autenticación JWT. ¡Todo desde cero! 🚀
 
 ## 🌐 Demo local
@@ -49,8 +51,11 @@ Cytalk es una aplicación de chat en tiempo real desarrollada con **Django**, **
 Puedes agregar capturas como:
 
 ```
-![Chat UI](screenshots/chat_screen.png)
-![Login](screenshots/login.png)
+![Login](screenshots/login.jpeg)
+![Home](screenshots/home.jpeg)
+![Chat](screenshots/chat.jpeg)
+![Image](screenshots/image.jpeg)
+![Rooms](screenshots/rooms.png)
 ```
 
 ---

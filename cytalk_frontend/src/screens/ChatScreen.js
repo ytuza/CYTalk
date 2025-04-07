@@ -201,7 +201,7 @@ export default function ChatScreen({ route }) {
                     <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
                     <View style={styles.modalContainer}>
                         {imageToShow && (
-                        <ExpoImage
+                        <ExpoImage  
                             source={{ uri: imageToShow }}
                             style={styles.fullscreenImage}
                             contentFit="contain"
@@ -228,7 +228,7 @@ export default function ChatScreen({ route }) {
           {console.log(selectedImage)}
           {selectedImage && (
             <View style={styles.imagePreview}>
-              <Image source={{ uri: selectedImage.uri }} style={styles.image} />
+              <ExpoImage source={{ uri: selectedImage.uri }} style={styles.image} />
             </View>
           )}
         </View>
