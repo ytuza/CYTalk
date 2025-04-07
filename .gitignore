@@ -1,0 +1,23 @@
+# Entorno virtual
+env_cytalk/
+
+# Node modules del frontend
+**/node_modules/
+
+# Archivos de Expo / React Native
+.expo/
+.expo-shared/
+
+# Archivos temporales
+*.log
+*.sqlite3
+*.pyc
+__pycache__/
+.DS_Store
+
+# Archivos del sistema
+.idea/
+.vscode/
+.env
+cytalk-firebase-adminsdk-*.json
+media/

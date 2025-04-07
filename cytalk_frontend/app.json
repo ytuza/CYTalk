@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "cytalk_frontend",
+    "slug": "cytalk_frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/cytalk.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/cytalk.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.cytuza1.cytalk_frontend"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f2901ac5-1983-4c02-b8aa-aad9da7c8f1d"
+      }
+    },
+    "owner": "cytuza1"
+  }
+}
