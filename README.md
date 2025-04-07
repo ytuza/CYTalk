@@ -50,13 +50,17 @@ Cytalk es una aplicación de chat en tiempo real desarrollada con **Django**, **
 
 Puedes agregar capturas como:
 
-```
+### Login
 ![Login](screenshots/login.jpeg)
+### Home
 ![Home](screenshots/home.jpeg)
+### Chat
 ![Chat](screenshots/chat.jpeg)
+### Image
 ![Image](screenshots/image.jpeg)
+### Rooms
 ![Rooms](screenshots/rooms.png)
-```
+
 
 ---
 
