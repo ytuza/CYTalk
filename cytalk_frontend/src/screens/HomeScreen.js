@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
@@ -41,31 +49,35 @@ export default function HomeScreen({ navigation }) {
             />
           )}
           <Text style={styles.title}>Bienvenido, {profile?.username} 👋</Text>
-          
+
           <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={() => navigation.navigate('Chat', { username: profile?.username })}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                navigation.navigate('Chat', { username: profile?.username })
+              }
             >
               <Text style={styles.buttonText}>Ir al chat</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={styles.button} 
+
+            <TouchableOpacity
+              style={styles.button}
               onPress={() => navigation.navigate('Profile')}
             >
               <Text style={styles.buttonText}>Editar perfil</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={() => navigation.navigate('RoomList', { username: profile?.username })}
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                navigation.navigate('RoomList', { username: profile?.username })
+              }
             >
               <Text style={styles.buttonText}>Ir a salas</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.button, styles.logoutButton]} 
+
+            <TouchableOpacity
+              style={[styles.button, styles.logoutButton]}
               onPress={handleLogout}
             >
               <Text style={styles.buttonText}>Cerrar sesión</Text>
@@ -85,24 +97,24 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
   },
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
     backgroundColor: '#f8f9fa',
   },
-  title: { 
-    fontSize: 28, 
+  title: {
+    fontSize: 28,
     fontWeight: 'bold',
-    marginVertical: 20, 
+    marginVertical: 20,
     textAlign: 'center',
     color: '#333',
   },
-  image: { 
-    width: 150, 
-    height: 150, 
-    borderRadius: 75, 
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     marginBottom: 20,
     borderWidth: 3,
     borderColor: '#4285f4',

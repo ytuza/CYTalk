@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 88
+target-version = ['py312']
+exclude = '''
+/(
+    migrations
+  | env_cytalk
+  | media
+  | static
+)/
+'''
+
+[tool.isort]
+profile = "black"

@@ -84,29 +84,39 @@ export default function ChatScreen({ route }) {
     console.log('🔍 Dando like al mensaje:', messageId);
     const token = await AsyncStorage.getItem('accessToken');
     try {
-      const res = await axios.post(`chat/like/${messageId}/`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post(
+        `chat/like/${messageId}/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // actualizar like_count localmente
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === messageId ? { ...msg, like_count: res.data.like_count, is_liked: !msg.is_liked } : msg
+          msg.id === messageId
+            ? {
+                ...msg,
+                like_count: res.data.like_count,
+                is_liked: !msg.is_liked,
+              }
+            : msg
         )
       );
     } catch (err) {
       console.error('❌ Error al dar like:', err);
     }
   };
-  
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
     });
-  
+
     if (!result.canceled) {
       setSelectedImage(result.assets[0]);
     }
@@ -123,7 +133,7 @@ export default function ChatScreen({ route }) {
       type: 'image/jpeg',
       name: 'chat_image.jpg',
     });
-  
+
     try {
       const res = await axios.post('chat/create/', formData, {
         headers: {
@@ -131,7 +141,7 @@ export default function ChatScreen({ route }) {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       setMessages((prev) => [...prev, res.data]);
       setSelectedImage(null);
       setMessageText('');
@@ -148,73 +158,83 @@ export default function ChatScreen({ route }) {
         keyboardVerticalOffset={90}
       >
         <View style={styles.container}>
-        <FlatList
+          <FlatList
             ref={flatListRef}
             data={messages}
             keyExtractor={(item, index) => `${index}`}
             renderItem={({ item }) => {
-                const isOwnMessage = item.username === username;
-                return (
-                    <View
-                      style={[
-                        styles.messageRow,
-                        isOwnMessage ? styles.myMessageRow : styles.otherMessageRow,
-                      ]}
-                    >
-                      {item.profile_image && (
+              const isOwnMessage = item.username === username;
+              return (
+                <View
+                  style={[
+                    styles.messageRow,
+                    isOwnMessage ? styles.myMessageRow : styles.otherMessageRow,
+                  ]}
+                >
+                  {item.profile_image && (
+                    <ExpoImage
+                      source={{ uri: item.profile_image }}
+                      style={styles.avatar}
+                      contentFit="cover"
+                      cachePolicy="memory-disk"
+                    />
+                  )}
+
+                  <View
+                    style={[
+                      styles.bubble,
+                      isOwnMessage ? styles.myBubble : styles.otherBubble,
+                    ]}
+                  >
+                    {!isOwnMessage && (
+                      <Text style={styles.user}>{item.username}</Text>
+                    )}
+
+                    {/* Texto del mensaje */}
+                    {item.content ? <Text>{item.content}</Text> : null}
+
+                    {/* Imagen si existe */}
+                    {item.image && (
+                      <TouchableOpacity onPress={() => openImage(item.image)}>
                         <ExpoImage
-                          source={{ uri: item.profile_image }}
-                          style={styles.avatar}
+                          source={{ uri: item.image }}
+                          style={styles.chatImage}
                           contentFit="cover"
                           cachePolicy="memory-disk"
                         />
-                      )}
-                
-                      <View style={[styles.bubble, isOwnMessage ? styles.myBubble : styles.otherBubble]}>
-                        {!isOwnMessage && <Text style={styles.user}>{item.username}</Text>}
-                
-                        {/* Texto del mensaje */}
-                        {item.content ? <Text>{item.content}</Text> : null}
-                
-                        {/* Imagen si existe */}
-                        {item.image && (
-                        <TouchableOpacity onPress={() => openImage(item.image)}>
-                            <ExpoImage
-                            source={{ uri: item.image }}
-                            style={styles.chatImage}
-                            contentFit="cover"
-                            cachePolicy="memory-disk"
-                            />
-                        </TouchableOpacity>
-                        )}
-                      <View style={styles.likeRow}>
+                      </TouchableOpacity>
+                    )}
+                    <View style={styles.likeRow}>
                       <TouchableOpacity onPress={() => handleLike(item.id)}>
                         <AntDesign
                           name={item.is_liked ? 'heart' : 'hearto'}
                           size={16}
                           color={item.is_liked ? 'red' : 'gray'}
                         />
-                        </TouchableOpacity>
-                        <Text style={styles.likeCount}> {item.like_count}</Text>
-                      </View>
+                      </TouchableOpacity>
+                      <Text style={styles.likeCount}> {item.like_count}</Text>
                     </View>
-                    <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
-                    <View style={styles.modalContainer}>
-                        {imageToShow && (
-                        <ExpoImage  
-                            source={{ uri: imageToShow }}
-                            style={styles.fullscreenImage}
-                            contentFit="contain"
-                            cachePolicy="memory-disk"
-                        />
-                        )}
-                    </View>
-                    </Modal>
                   </View>
-                );
-              }}
+                  <Modal
+                    isVisible={modalVisible}
+                    onBackdropPress={() => setModalVisible(false)}
+                  >
+                    <View style={styles.modalContainer}>
+                      {imageToShow && (
+                        <ExpoImage
+                          source={{ uri: imageToShow }}
+                          style={styles.fullscreenImage}
+                          contentFit="contain"
+                          cachePolicy="memory-disk"
+                        />
+                      )}
+                    </View>
+                  </Modal>
+                </View>
+              );
+            }}
             contentContainerStyle={{ paddingBottom: 20 }}
-            />
+          />
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -222,13 +242,18 @@ export default function ChatScreen({ route }) {
               onChangeText={setMessageText}
               placeholder="Escribe un mensaje..."
             />
-            <Button title="Enviar" onPress={selectedImage ? sendImageMessage : sendMessage} />
+            <Button
+              title="Enviar"
+              onPress={selectedImage ? sendImageMessage : sendMessage}
+            />
             <Button title="📷" onPress={pickImage} />
           </View>
-          {console.log(selectedImage)}
           {selectedImage && (
             <View style={styles.imagePreview}>
-              <ExpoImage source={{ uri: selectedImage.uri }} style={styles.image} />
+              <ExpoImage
+                source={{ uri: selectedImage.uri }}
+                style={styles.image}
+              />
             </View>
           )}
         </View>
@@ -271,7 +296,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 5,
-  },  
+  },
   messageRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -282,7 +307,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     marginRight: 8,
-  },  
+  },
   bubble: {
     backgroundColor: '#f0f0f0',
     borderRadius: 8,
@@ -325,7 +350,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     alignSelf: 'flex-start',
     borderTopLeftRadius: 0,
-  },    
+  },
   imagePreview: {
     marginTop: 10,
     alignItems: 'center',

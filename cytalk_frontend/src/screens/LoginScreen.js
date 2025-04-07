@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Image,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/authSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,11 +26,11 @@ export default function LoginScreen({ navigation }) {
     try {
       const response = await axios.post('auth/login/', { username, password });
       const { access } = response.data;
-  
+
       dispatch(setCredentials({ user: username, accessToken: access }));
       await AsyncStorage.setItem('accessToken', access);
       await AsyncStorage.setItem('username', username);
-  
+
       // Alert.alert('✅ Login exitoso');
       await registerForPushNotificationsAsync();
       navigation.replace('Home');
@@ -29,15 +40,18 @@ export default function LoginScreen({ navigation }) {
       Alert.alert('❌ Error de login', 'Revisa tus credenciales');
     }
   };
-  
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoidingView}
       >
         <View style={styles.container}>
-          <Image source={require('../../assets/cytalk.png')} style={styles.logo} />
+          <Image
+            source={require('../../assets/cytalk.png')}
+            style={styles.logo}
+          />
           <Text style={styles.title}>Iniciar Sesión</Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -73,16 +87,16 @@ const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
     backgroundColor: '#f8f9fa',
   },
-  title: { 
-    fontSize: 28, 
+  title: {
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 30, 
+    marginBottom: 30,
     textAlign: 'center',
     color: '#333',
   },

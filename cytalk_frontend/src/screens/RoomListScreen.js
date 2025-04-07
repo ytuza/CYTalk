@@ -36,30 +36,30 @@ export default function RoomListScreen({ navigation, route }) {
 
   const createRoom = async () => {
     if (!newRoomName.trim()) return;
-  
+
     try {
       await axios.post('chat/rooms/', { name: newRoomName });
       setNewRoomName('');
-      fetchRooms(); 
+      fetchRooms();
       enterRoom(newRoomName);
     } catch (err) {
       console.error('❌ Error al crear sala:', err);
     }
   };
-  
+
   const enterRoom = (roomName) => {
     navigation.navigate('Chat', { roomName, username });
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoidingView}
       >
         <View style={styles.container}>
           <Text style={styles.title}>Salas de Chat</Text>
-          
+
           <View style={styles.createRoomContainer}>
             <TextInput
               value={newRoomName}
@@ -68,14 +68,11 @@ export default function RoomListScreen({ navigation, route }) {
               placeholderTextColor="#999"
               style={styles.input}
             />
-            <TouchableOpacity 
-              style={styles.createButton} 
-              onPress={createRoom}
-            >
+            <TouchableOpacity style={styles.createButton} onPress={createRoom}>
               <Text style={styles.createButtonText}>Crear sala</Text>
             </TouchableOpacity>
           </View>
-          
+
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#4285f4" />
@@ -85,8 +82,8 @@ export default function RoomListScreen({ navigation, route }) {
               data={rooms}
               keyExtractor={(item) => `${item.id}`}
               renderItem={({ item }) => (
-                <TouchableOpacity 
-                  style={styles.roomButton} 
+                <TouchableOpacity
+                  style={styles.roomButton}
                   onPress={() => enterRoom(item.name)}
                 >
                   <Text style={styles.roomName}># {item.name}</Text>
@@ -110,14 +107,14 @@ const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
-  container: { 
-    flex: 1, 
+  container: {
+    flex: 1,
     padding: 20,
     backgroundColor: '#f8f9fa',
   },
-  title: { 
-    fontSize: 28, 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
   },
@@ -176,7 +173,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: '#4285f4',
   },
-  roomName: { 
+  roomName: {
     fontSize: 18,
     color: '#333',
     fontWeight: '500',

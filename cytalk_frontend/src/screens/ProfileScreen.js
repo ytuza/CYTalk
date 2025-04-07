@@ -64,7 +64,7 @@ export default function ProfileScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Mi Perfil</Text>
-        
+
         <View style={styles.imageContainer}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.image} />
@@ -73,20 +73,25 @@ export default function ProfileScreen() {
               <Ionicons name="person" size={80} color="#999" />
             </View>
           )}
-          
+
           {loading && (
             <View style={styles.loadingOverlay}>
               <ActivityIndicator size="large" color="#fff" />
             </View>
           )}
         </View>
-        
-        <TouchableOpacity 
-          style={styles.button} 
+
+        <TouchableOpacity
+          style={styles.button}
           onPress={pickImage}
           disabled={loading}
         >
-          <Ionicons name="camera" size={24} color="#fff" style={styles.buttonIcon} />
+          <Ionicons
+            name="camera"
+            size={24}
+            color="#fff"
+            style={styles.buttonIcon}
+          />
           <Text style={styles.buttonText}>
             {loading ? 'Subiendo...' : 'Cambiar foto de perfil'}
           </Text>
@@ -101,9 +106,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
   },
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#f8f9fa',
@@ -118,9 +123,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 30,
   },
-  image: { 
-    width: 200, 
-    height: 200, 
+  image: {
+    width: 200,
+    height: 200,
     borderRadius: 100,
     borderWidth: 4,
     borderColor: '#4285f4',

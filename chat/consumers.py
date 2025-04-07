@@ -1,46 +1,45 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth import get_user_model
-from .models import Message, ChatRoom
-from asgiref.sync import sync_to_async
-from firebase_admin import messaging, credentials, initialize_app
-import firebase_admin
 import os
 
+import firebase_admin
+from asgiref.sync import sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
+from django.contrib.auth import get_user_model
+from firebase_admin import credentials, initialize_app, messaging
+
+from .models import ChatRoom, Message
+
 User = get_user_model()
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         """Se ejecuta cuando un cliente se conecta"""
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
 
         # Crear la sala si no existe
         await self.get_or_create_room(self.room_name)
 
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         await self.accept()
 
     async def disconnect(self, close_code):
         """Se ejecuta cuando un cliente se desconecta"""
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
         """Recibe mensajes de WebSocket y los guarda en la BD"""
         try:
             data = json.loads(text_data)
-            message = data.get('message', None)
-            username = data.get('username', None)
+            message = data.get("message", None)
+            username = data.get("username", None)
 
             if not message or not username:
-                await self.send(text_data=json.dumps({"error": "Mensaje o usuario no válido"}))
+                await self.send(
+                    text_data=json.dumps({"error": "Mensaje o usuario no válido"})
+                )
                 return
 
             user = await self.get_user(username)
@@ -55,11 +54,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # Enviar mensaje a los clientes en el grupo
             await self.channel_layer.group_send(
                 self.room_group_name,
-                {
-                    "type": "chat_message",
-                    "message": message,
-                    "username": username
-                }
+                {"type": "chat_message", "message": message, "username": username},
             )
 
         except json.JSONDecodeError:
@@ -67,10 +62,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_message(self, event):
         """Enviar mensaje a WebSockets"""
-        await self.send(text_data=json.dumps({
-            "message": event["message"],
-            "username": event["username"]
-        }))
+        await self.send(
+            text_data=json.dumps(
+                {"message": event["message"], "username": event["username"]}
+            )
+        )
 
     @sync_to_async
     def get_user(self, username):
@@ -95,14 +91,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def send_push_notification(self, room, sender, message):
         if not firebase_admin._apps:
-            cred_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'cytalk-firebase-adminsdk-fbsvc-ad779da798.json')
+            cred_path = os.path.join(
+                os.path.dirname(os.path.dirname(__file__)),
+                "cytalk-firebase-adminsdk-fbsvc-ad779da798.json",
+            )
             cred = credentials.Certificate(cred_path)
             initialize_app(cred)
 
         users = User.objects.filter(fcm_token__isnull=False).exclude(id=sender.id)
         tokens = [user.fcm_token for user in users]
-
-        print(tokens)
 
         for token in tokens:
             try:
@@ -110,9 +107,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     messaging.Message(
                         notification=messaging.Notification(
                             title=f"Nuevo mensaje en {room.name}",
-                            body=f"{sender.username}: {message}"
+                            body=f"{sender.username}: {message}",
                         ),
-                        token=token
+                        token=token,
                     )
                 )
             except Exception as e:
