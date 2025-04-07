@@ -91,4 +91,4 @@ npx expo start
 
 **Christian Ytuza**  
 💻 Fullstack Mobile & Web Developer  
-🌎 [cytuza.com](https://cytuza.me)
+🌎 [cytuza.me](https://cytuza.me)
